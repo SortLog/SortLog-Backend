@@ -48,38 +48,17 @@ userRouter.post('/add', async (req, res) => {
   const contactType = req.body.contactType;
   const phone = req.body.phone;
 
-  // // const { id } = req.params;
-  // try {
-  //   const result = new User({ email, name, provider, photoUrl, contactType, phone });
-  //   // const user = { id, name: 'John Doe' };
-  //   // tasks.push(result);
-  //   return result.save()
-  //   // return res.status(201).json(result);
-  // } catch (err) {
-  //   return res.status(400).json(err);
-  // }
-  
   const result = new User({ email, name, provider, photoUrl, contactType, phone });
-    // const user = { id, name: 'John Doe' };
-    // tasks.push(result);
   result.save()
-    // return res.status(201).json(result);
   .then(()=>res.json('User Added'))
   .catch(err=>res.status(400).json("Error " + err));
 });
 
-// userRouter.get('/:id', async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const result = await User.findById(id)
-//     if (!result) {
-//       return res.status(StatusCodes.NOT_FOUND).json({message:'not found'});
-//     }
-//     return res.status(StatusCodes.OK).json(result);
-//   } catch (err) {
-//     return res.status(StatusCodes.NOT_FOUND).json(err);
-//   }
-// });
+userRouter.delete('/:id', async (req, res) => {
+  User.findByIdAndDelete(req.params.id)
+  .then(()=>res.json("User deleted"))
+  .catch(err=>res.status(400).json("Error " + err));
+});
 
 // userRouter.get('/:id', async (req, res) => {
 //   const { id } = req.params;
