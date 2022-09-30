@@ -20,14 +20,17 @@ const resolvers: IResolvers = {
     }
   },
   Mutation: {
-    addUser: (_, inputObject, ctx: Context) => {
-      return usersController.addUser(inputObject, ctx);
+    signUp: (_, inputObject, ctx: Context) => {
+      return usersController.addUser(inputObject.input);
     },
     updateUser: (_, inputObject, ctx: Context) => {
       return usersController.updateUser(inputObject, ctx);
     },
     deleteUser: (_, inputObject, ctx: Context) => {
       return usersController.deleteUser(inputObject, ctx);
+    },
+    signIn: (_, input) => {
+        return usersController.signIn(input)
     }
   }
 };

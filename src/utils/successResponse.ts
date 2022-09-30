@@ -3,15 +3,18 @@ const messageResponse: { [key: string]: any } = {
   updated: "Record Updated",
   deleted: "Record Deleted",
   fetch: "Records fetch",
-  notUpdated: "Records not updated"
+  notUpdated: "Records not updated",
+  notFound: "Not found"
 }
 export function successResponse(response: any, recordStatus: string) {
   return {
     status: {
-      code: 1000,
+      code: 200,
       header: "SUCCESS",
       description: messageResponse[recordStatus]
     },
     data: response
   }
 }
+
+

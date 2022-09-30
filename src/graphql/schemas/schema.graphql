@@ -5,14 +5,15 @@ type User {
   photoUrl: String
   contactType:String
   phone:String
+  password: String
 }
 
 type Query {
   getUsers(contactType:String): getUsersData
 }
 type getUsersData {
-status:Status
-data:[User]
+    status:Status
+    data:[User]
 }
 
 type Query {
@@ -36,11 +37,15 @@ type Query {
 }
 
 type Mutation {
-  addUser(input: InputUser!): userData
+  signUp(input: InputUser!): userData
 }
 
 type Mutation {
   updateUser(id: String, input: InputUser!): userData
+}
+
+type Mutation {
+    signIn(input: InputUser!): userData
 }
 
 input InputUser {
@@ -50,6 +55,7 @@ input InputUser {
   photoUrl: String
   contactType:String
   phone:String
+  password: String
 }
 
 type Status {
@@ -62,4 +68,9 @@ type Status {
 type userData {
   status: Status
   data:User
+}
+
+type loginUser {
+    email: String
+    password: String
 }

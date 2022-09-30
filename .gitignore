@@ -18,4 +18,6 @@ Thumbs.db
 conf/env.json
 .env
 .idea
+yarn.lock
 
+.gitignore
