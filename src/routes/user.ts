@@ -21,6 +21,7 @@ userRouter.get('/list', async (req, res) => {
 // get specific data
 userRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
+  
   try {
     const result = await User.findById(id)
     if (!result) {
