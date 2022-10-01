@@ -7,6 +7,11 @@ import { UsersController } from '../../controllers/users.controller';
 
 const usersController = new UsersController();
 
+type InputObj = {
+    email: String
+    password: String
+}
+
 const resolvers: IResolvers = {
   Query: {
     token: (_, args: any) => {
@@ -29,8 +34,8 @@ const resolvers: IResolvers = {
     deleteUser: (_, inputObject, ctx: Context) => {
       return usersController.deleteUser(inputObject, ctx);
     },
-    signIn: (_, input) => {
-        return usersController.signIn(input)
+    signIn: (_, inputObj) => {
+        return usersController.signIn(inputObj)
     }
   }
 };

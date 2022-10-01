@@ -8,6 +8,15 @@ type User {
   password: String
 }
 
+type signInData {
+    status: Status
+    data: Token
+}
+
+type Token {
+    token: String
+}
+
 type Query {
   getUsers(contactType:String): getUsersData
 }
@@ -45,7 +54,7 @@ type Mutation {
 }
 
 type Mutation {
-    signIn(input: InputUser!): userData
+    signIn(input: loginUser!): signInData
 }
 
 input InputUser {
@@ -70,7 +79,7 @@ type userData {
   data:User
 }
 
-type loginUser {
+input loginUser {
     email: String
     password: String
 }

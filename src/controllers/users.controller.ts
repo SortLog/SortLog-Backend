@@ -9,6 +9,10 @@ import { resolveCname } from 'dns';
 import bcrypt from 'bcryptjs'
 
 const saltRounds = 10
+type InputObj = {
+    email: String
+    password: String
+}
 
 export class UsersController {
   async addUser(input:any) {
@@ -62,15 +66,22 @@ export class UsersController {
     }
   }
 
-  async signIn(input: any) {
+
+
+  async signIn(inputObj: any) {
+      const { input } = inputObj
     try {
-      const result = await User.findOne(input.email)
+      const result = await User.findOne({email: input.email})
+      console.log(result)
       if(!result) return notFoundResponse(result, 'not found')
-      if(input.password === result.password && input.email === result.email) {
+      const isMatch = await bcrypt.compare(input.password, result.password)
+      console.log(isMatch)
+      if(isMatch && input.email === result.email) {
         const token = jwt.sign(input, process.env.auth_encryption_salt)
+        console.log(token)
         return successResponse({...result, token}, 'token')
       }
-     return unauthorizedResponse(resolveCname)
+     return unauthorizedResponse(result)
     } catch (error) {
       return buildErrorResponse(error)
     }
