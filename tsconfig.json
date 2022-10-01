@@ -3,10 +3,9 @@
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "target": "es5",
     "module": "commonjs",
-    "lib": ["dom", "es6"],
+    "lib": ["es6"],
     "outDir": "dist",
     "removeComments": true,
     "strict": true,
@@ -16,9 +15,8 @@
     "emitDecoratorMetadata": true,
     "suppressImplicitAnyIndexErrors": true,
     "noImplicitAny": false,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "incremental": true
+    "resolveJsonModule": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules, coverage"],
+  "include": ["src"]
 }

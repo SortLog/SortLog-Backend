@@ -1,28 +1,18 @@
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 
-import express from 'express';
-const chai = require('chai')
-const { expect } = chai;
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import 'graphql-import-node';
-import typeDefs from './schema';
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { MongoHelper } from '../../src/helpers/mongoHelpers';
-import resolvers from '../../src/graphql/resolvers/resolvers';
+import typeDefs from '../src/graphql/schema';
+import resolvers from '../src/graphql/resolvers/resolvers';
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers
 });
 
-
-const app = express();
-const mHelper = new MongoHelper();
-mHelper.initiateMongoConnection();
-
-const testServer = new ApolloServer({
+const apolloServer = new ApolloServer({
   schema
 });
 
-export = testServer;
+export = apolloServer;

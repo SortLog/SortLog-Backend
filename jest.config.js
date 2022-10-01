@@ -1,12 +1,14 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  roots: ['<rootDir>'],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
   transform: {
-    "^.+\\.graphql$": "jest-transform-graphql",
-    '^.+\\.ts?$': 'ts-jest'
+    '^.+\\.graphql$': 'jest-transform-graphql',
+    '^.+\\.ts?$': 'ts-jest',
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.ts?$',
   moduleFileExtensions: ['ts', 'js', 'json', 'node', 'graphql'],
   collectCoverage: true,
   clearMocks: true,
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 };

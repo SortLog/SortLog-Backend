@@ -30,7 +30,7 @@ export class MongoHelper {
   public initiateMongoConnection(): void {
     (<any>mongoose).Promise = global.Promise;
     mongoose
-      .connect(process.env.MONGO_URL || 'mongodb://localhost:27017/YourDB', {
+      .connect(process.env.MONGO_URL, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true,
