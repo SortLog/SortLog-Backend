@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon src/server.ts --exec ts-node src/server.ts -e ts,graphql",
+    "dev": "yarn prettier && nodemon src/server.ts --exec ts-node src/server.ts -e ts,graphql",
     "pre-commit": "yarn prettier && yarn typecheck && yarn test",
     "build": "tsc -p . && ncp src/graphql/schemas/ dist/graphql/schemas",
     "start": "node dist/server.js",
