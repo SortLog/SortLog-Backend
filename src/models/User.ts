@@ -36,5 +36,8 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-const User= mongoose.model('User', UserSchema);
+// module.exports = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
+// contactType: String
+// phone: String
 export default User
