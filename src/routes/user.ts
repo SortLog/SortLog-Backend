@@ -53,6 +53,7 @@ userRouter.post('/add', async (req, res) => {
 // update existing data
 userRouter.put('/update/:id', async (req, res) => {
   User.findById(req.params.id)
+  
   .then(User=>{
     User.email = req.body.email;
     User.name = req.body.name;
@@ -65,7 +66,6 @@ userRouter.put('/update/:id', async (req, res) => {
     .then(()=>res.json("User updated"))
     .catch(err=>res.status(400).json("Error" + err))
   })
-
   .catch(err=>res.status(400).json("Error" + err));
 });
 
