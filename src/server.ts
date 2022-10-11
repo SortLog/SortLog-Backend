@@ -45,6 +45,7 @@ app.use('*', cors());
 app.use(compression());
 app.use('/api', Router);
 app.get('/health-check', (req, res) => res.status(200).send({ message: 'healthy' }));
+app.get('/', (req, res) => res.send('Hello SortLog!'));
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerOptions)));
 server.applyMiddleware({ app, path: '/graphql' });
 
