@@ -7,7 +7,7 @@ import { ApolloServer } from 'apollo-server-express';
 import depthLimit from 'graphql-depth-limit';
 import schema from './graphql/schema';
 import { MongoHelper } from './db/mongo';
-import Router from './routes';
+import Router from './controllers';
 
 import compression from 'compression';
 import cors from 'cors';
@@ -43,10 +43,10 @@ app.use(express.json());
 app.use(cors());
 app.use('*', cors());
 app.use(compression());
-app.use('/api', Router);
-app.get('/health-check', (req, res) => res.status(200).send({ message: 'healthy' }));
 app.get('/', (req, res) => res.send('Hello SortLog!'));
+app.get('/health-check', (req, res) => res.status(200).send({ message: 'healthy' }));
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerOptions)));
+app.use('/api', Router);
 server.applyMiddleware({ app, path: '/graphql' });
 
 const httpServer = createServer(app);
@@ -56,10 +56,3 @@ httpServer.listen({ port: process.env.PORT }, (): void => {
   console.log(`\n🚀 Swagger is now running on http://localhost:${port}/docs`);
   console.log(`\n🚀 GraphQL is now running on http://localhost:${port}/graphql`);
 });
-
-// try this in graphql playground:
-// query {
-//   token(
-//     email: "vinod@test.com"
-//   )
-// }

@@ -1,35 +1,49 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { Context } from '../../models/context';
 import { IResolvers } from 'graphql-tools';
-import * as jwt from 'jsonwebtoken';
-import { AppConstants } from '../../constants/app.constants';
-import { UsersController } from '../../controllers/users.controller';
-
-const usersController = new UsersController();
+import * as Users from '../../services/users';
+import * as Items from '../../services/items';
 
 const resolvers: IResolvers = {
   Query: {
-    token: (_, args: any) => {
-      return jwt.sign({ data: args[AppConstants.EMAIL] }, <string>process.env.auth_encryption_salt);
+    // users
+    findUsers: (_: void, args: any, _info: GraphQLResolveInfo) => {
+      return Users.listUsers();
     },
-    getUsers: (_: void, args: any, ctx: Context, _info: GraphQLResolveInfo) => {
-      return usersController.getUsers(args, ctx);
+    findUserById: (_: void, args: any, _info: GraphQLResolveInfo) => {
+      return Users.getUser(args.id);
     },
-    findByUserId: (_: void, args: any, ctx: Context, _info: GraphQLResolveInfo) => {
-      return usersController.findByUserId(args, ctx);
-    }
+
+    // items
+    findItems: (_: void, args: any, _info: GraphQLResolveInfo) => {
+      return Items.listItems();
+    },
+    findItemById: (_: void, args: any, _info: GraphQLResolveInfo) => {
+      return Items.getItem(args.id);
+    },
   },
   Mutation: {
-    addUser: (_, inputObject, ctx: Context) => {
-      return usersController.addUser(inputObject, ctx);
+    // users
+    postUser: (_, args) => {
+      return Users.postUser(args);
     },
-    updateUser: (_, inputObject, ctx: Context) => {
-      return usersController.updateUser(inputObject, ctx);
+    putUser: (_, args) => {
+      return Users.putUser(args.id, args);
     },
-    deleteUser: (_, inputObject, ctx: Context) => {
-      return usersController.deleteUser(inputObject, ctx);
-    }
-  }
+    deleteUser: (_, args) => {
+      return Users.deleteUser(args.id);
+    },
+
+    // items
+    postItem: (_, args) => {
+      return Items.postItem(args);
+    },
+    putItem: (_, args) => {
+      return Items.putItem(args.id, args);
+    },
+    deleteItem: (_, args) => {
+      return Items.deleteItem(args.id);
+    },
+  },
 };
 
 export default resolvers;

@@ -1,65 +1,93 @@
 type User {
   email: String
   name: String
-  provider: String
   photoUrl: String
-  contactType:String
-  phone:String
+  provider: String
+  contactType: String
+  phone: String
 }
 
 type Query {
-  getUsers(contactType:String): getUsersData
-}
-type getUsersData {
-status:Status
-data:[User]
+  findUsers: [User]
 }
 
 type Query {
-  findByUserId(id: String!): findByUserIdData
-}
-type findByUserIdData{
-  status:Status
-  data:User
-}
-
-type  deleteUsersData{
- status:Status
+  findUserById(id: ID!): User
 }
 
 type Mutation {
-  deleteUser(id: String): deleteUsersData
-}
-
-type Query {
-  token(email: String!): String!
+  postUser(
+    email: String
+    name: String
+    photoUrl: String
+    provider: String
+    contactType: String
+    phone: String
+  ): User
 }
 
 type Mutation {
-  addUser(input: InputUser!): userData
+  putUser(
+    id: ID!
+    email: String
+    name: String
+    photoUrl: String
+    provider: String
+    contactType: String
+    phone: String
+  ): User
 }
 
 type Mutation {
-  updateUser(id: String, input: InputUser!): userData
+  deleteUser(id: ID!): User
 }
 
-input InputUser {
-  email: String
+type Item {
+  sku: String
   name: String
-  provider: String
-  photoUrl: String
-  contactType:String
-  phone:String
+  price: Float
+  quantity: Int
+  size: String
+  tags: [String]
+  category: String
+  image: String
 }
 
-type Status {
-  code :Int 
-  header: String
-  description : String
-  moreInfo :String
+type Query {
+  findItems: [Item]
 }
 
-type userData {
-  status: Status
-  data:User
+type Query {
+  findItemById(id: ID!): Item
+}
+
+type Mutation {
+  postItem(
+    sku: String
+    name: String
+    price: Float
+    quantity: Int
+    size: String
+    tags: [String]
+    category: String
+    image: String
+  ): Item
+}
+
+type Mutation {
+  putItem(
+    id: ID!
+    sku: String
+    name: String
+    price: Float
+    quantity: Int
+    size: String
+    tags: [String]
+    category: String
+    image: String
+  ): Item
+}
+
+type Mutation {
+  deleteItem(id: ID!): Item
 }
