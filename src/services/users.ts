@@ -16,6 +16,7 @@ export const postUser = async (user: any) => {
 
 export const putUser = async (id: any, user: any) => {
   const { email, name, provider, photoUrl, contactType, phone } = user;
+  console.log(user)
   const theUser = await User.findById(id);
 
   theUser.email = email;
