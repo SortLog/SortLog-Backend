@@ -18,21 +18,29 @@ pipeline {
 
         //Install denpendencies 
     stages{
-        stage('Install dependency')
-        {
-            
+        stage('Install dependency'){
+            when { anyOf { branch 'main'; branch 'dev' } }
+            agent {
+                docker {
+                    image 'node:16-alpine'
+                    args '-i --entrypoint='
+                }
+            }
             steps{
-             echo "Installing packages"
-             sh 'yarn install' 
+             echo "building packages..."
+             sh '''
+                yarn install
+                
+             '''
              }     
         }
 
-        stage ('Test') {
-            steps {
-                echo "Testing...."
-                sh 'yarn pre-commit'
-            }
-        }
+        // stage ('Test') {
+        //     steps {
+        //         echo "Testing...."
+        //         sh 'yarn pre-commit'
+        //     }
+        // }
 
          stage('Build Docker Image and Image Updating to ECR'){
             when { anyOf { branch 'main'; branch 'dev' } }
