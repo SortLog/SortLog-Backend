@@ -1,61 +1,106 @@
 pipeline {
-     agent any
+    agent any
+    
+    environment {
+        AWS_CRED = "AWS_sortlog"
+        AWS_REGION = "ap-southeast-2"
 
-    environment{
-        CI ='true'
-        AWS_CRED        = 'AWS_sortlog' //Change to yours
-        AWS_REGION      = 'ap-southeast-2'
-    }
+        SORTLOG_DEV_REPO = "sortlog-dev"
+        SORTLOG_PROD_REPO = "sortlog-prod"
 
+        IMAGE_DEV = "$SORTLOG_DEV_REPO"
+        IMAGE_PROD = "$SORTLOG_PROD_REPO"
+
+        IMAGE_TAG = "${env.BUILD_TAG}"
+        ECR_URL = "003374733998.dkr.ecr.ap-southeast-2.amazonaws.com"
+    } 
+
+
+        //Install denpendencies 
     stages{
         stage('Install dependency')
         {
+            
             steps{
              echo "Installing packages"
-             sh 'yarn install'
-             
-             }
-             
+             sh 'yarn install' 
+             }     
         }
 
-        stage('yarn build') 
-        {
-            steps{
-             sh "yarn build "
-             sh 'ls -la ./dist'
-            //  sh 'sudo rm -r ./data'
-             }
+        stage ('Test') {
+            steps {
+                echo "Testing...."
+                sh 'yarn pre-commit'
+            }
+        }
+
+         stage('Build Docker Image and Image Updating to ECR'){
+            when { anyOf { branch 'main'; branch 'dev' } }
+
+            steps {
+                withAWS(credentials: AWS_CRED, region: AWS_REGION){
+
+                    script {
+
+                        if(currentBuild.result != null && currentBuild.result != 'SUCCESS'){
+                            return false
+                        }
+
+                        if (env.BRANCH_NAME == 'dev' ){
+                            echo "Building and Uploading Dev Docker Image to ECR"
+                            sh '''
+                                docker build -t $IMAGE_DEV:$IMAGE_TAG .
+                                docker images --filter reference=$IMAGE_DEV
+                                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
+                                docker tag $IMAGE_DEV:$IMAGE_TAG $ECR_URL/$IMAGE_DEV:$IMAGE_TAG
+                                docker push $ECR_URL/$IMAGE_DEV:$IMAGE_TAG
+                            '''
+                        }
+                        
+
+                        if (env.BRANCH_NAME == 'main'){
+                            echo "Building and Uploading Prod Docker Image to ECR"
+                             sh '''
+                                docker build -t $IMAGE_PROD:$IMAGE_TAG .
+                                docker images --filter reference=$IMAGE_PROD
+                                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
+                                docker tag $IMAGE_PROD:$IMAGE_TAG $ECR_URL/$IMAGE_PROD:$IMAGE_TAG
+                                docker push $ECR_URL/$IMAGE_PROD:$IMAGE_TAG
+                            '''
+                        }
+                    }                    
+                    
+                }
+            }
         } 
-         stage('Build Docker image') {
-            steps {
-                sh 'docker build -t sortlogback .'
-                sh 'docker images --filter reference=sortlogback'
+
+    }
+    
+    post {
+        always {
+            script {
+                try{
+                    // docker images -qa | xargs docker rmi -f
+                    sh'''
+                        docker rmi -f $(docker images -q)
+                        docker system prune -f
+                        cleanWs()
+                    '''
+                } catch (Exception e) {
+                    echo "docker clean failed"
+                }
             }
+        
         }
-        // stage('Run Docker Container') 
-        // {
-        //     environment{MONGO_URL=credentials('MONGO_URL')}
-        //     steps {
-        //         sh 'docker-compose up '
-        //     }
-        //   }
 
+        failure {
+            // send message it was failsure
+            echo "uhm... 我觉得不太行！"
+        }
 
-        stage('upload backend to  ECR bucket') {
-            steps {
-                withAWS(credentials: AWS_CRED, region: AWS_REGION)        
-               
-                {
-                    echo "deploy to ECR "
-                    sh '''
-                    docker tag sortlogback 003374733998.dkr.ecr.ap-southeast-2.amazonaws.com/sortlog-repository
-                    docker login -u AWS -p $(aws ecr get-login-password --region ap-southeast-2) 003374733998.dkr.ecr.ap-southeast-2.amazonaws.com/sortlog-repository
-                    docker push 003374733998.dkr.ecr.ap-southeast-2.amazonaws.com/sortlog-repository
-                    '''}
-             
-            }
-         
-         }
-
+        success {
+            // send message it was success
+            echo "老铁！恭喜你，成功了呀!"
+        }
     }
 }

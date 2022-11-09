@@ -1,0 +1,8 @@
+# Install dependencies only when needed
+FROM node:16-alpine AS sortlogapp
+#Next we create a directory to hold the application code inside the image
+WORKDIR /app
+# Install dependencies based on the preferred package manager
+COPY ["package.json", "yarn.lock*", "pnpm-lock.yaml*", "./"]
+
+RUN yarn install

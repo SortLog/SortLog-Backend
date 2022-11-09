@@ -1,8 +1,8 @@
 import mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema(
+const ItemSchema = new mongoose.Schema(
   {
-    email: {
+    sku: {
       type: String,
       required: true,
       unique: true,
@@ -11,20 +11,23 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    photoUrl: {
+    price: {
+      type: Number,
+    },
+    quantity: {
+      type: Number,
+    },
+    size: {
       type: String,
     },
-    provider: {
-      type: String,
-      required: true,
+    tags: {
+      type: Array,
     },
-    contactType: {
+    category: {
       type: String,
-      required: true,
     },
-    phone: {
+    image: {
       type: String,
-      required: true,
     },
   },
   {
@@ -32,5 +35,5 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model('users', UserSchema);
-export default User;
+const Item = mongoose.model('items', ItemSchema);
+export default Item;

@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('express-async-errors');
 
 import express from 'express';
 import { createServer } from 'http';
@@ -7,13 +8,14 @@ import { ApolloServer } from 'apollo-server-express';
 import depthLimit from 'graphql-depth-limit';
 import schema from './graphql/schema';
 import { MongoHelper } from './db/mongo';
-import Router from './routes';
+import Router from './controllers';
 
 import compression from 'compression';
 import cors from 'cors';
 
 import swaggerUI from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
+import errorMiddleware from './middleware/errorMiddleware'
 
 const app = express();
 const mHelper = new MongoHelper();
@@ -43,10 +45,13 @@ app.use(express.json());
 app.use(cors());
 app.use('*', cors());
 app.use(compression());
-app.use('/api', Router);
+app.get('/', (req, res) => res.send('Hello SortLog!'));
 app.get('/health-check', (req, res) => res.status(200).send({ message: 'healthy' }));
 app.get('/', (req, res) => res.send('Hello SortLog!'));
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerOptions)));
+app.use('/api', Router);
+errorMiddleware(app);
+
 server.applyMiddleware({ app, path: '/graphql' });
 
 const httpServer = createServer(app);
@@ -56,10 +61,3 @@ httpServer.listen({ port: process.env.PORT }, (): void => {
   console.log(`\n🚀 Swagger is now running on http://localhost:${port}/docs`);
   console.log(`\n🚀 GraphQL is now running on http://localhost:${port}/graphql`);
 });
-
-// try this in graphql playground:
-// query {
-//   token(
-//     email: "vinod@test.com"
-//   )
-// }
