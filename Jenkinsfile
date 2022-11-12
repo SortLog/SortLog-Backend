@@ -20,6 +20,7 @@ pipeline {
     stages{
         stage('Install dependency')
         {
+            
             steps{
              echo "Installing packages"
              sh 'yarn install' 
@@ -34,6 +35,7 @@ pipeline {
         }
 
          stage('Build Docker Image and Image Updating to ECR'){
+            when { anyOf { branch 'main'; branch 'dev' } }
 
             steps {
                 withAWS(credentials: AWS_CRED, region: AWS_REGION){
