@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-const yup = require('yup');
+const Joi = require('joi');
 
 const companySchema = new Schema(
   {
@@ -14,9 +14,9 @@ const companySchema = new Schema(
         required: true,
         validate: {
           validator: async (email) => {
-            // console.log(await yup.string().email().validate(email))
-            return yup.string().email().validate(email);
+            return !Joi.string().email().validate(email).error;
           },
+          msg: "Invalid email format",
         },
       },
     ],
