@@ -34,7 +34,7 @@ userRouter.get('/:id', async (req, res) => {
 
 // add new data
 userRouter.post('/add', async (req, res) => {
-  const { email, name, provider, photoUrl, contactType, phone } = req.body;
+  const { email, name, provider, photoUrl, contactType, phone} = req.body;
 
   try {
     const result = await Users.postUser({ email, name, provider, photoUrl, contactType, phone });

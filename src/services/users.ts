@@ -11,6 +11,7 @@ export const getUser = async (id: any) => {
 export const postUser = async (user: any) => {
   const { email, name, provider, photoUrl, contactType, phone } = user;
   const result = new User({ email, name, provider, photoUrl, contactType, phone });
+  console.log('save user', user)
   return await result.save();
 };
 
