@@ -1,11 +1,15 @@
 import User from "../models/users";
 
 export const listUsers = async () => {
-  return await User.find();
+  return User.find();
 };
 
 export const getUser = async (id: any) => {
-  return await User.findById(id);
+  return User.findById(id);
+};
+
+export const getUserByEmail = async (email: any) => {
+  return await User.findOne({email: email},function (err, User){});
 };
 
 export const postUser = async (user: any) => {
