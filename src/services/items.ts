@@ -1,8 +1,13 @@
 import Item from "../models/items";
 
 export const listItems = async () => {
-  return await Item.find();
+  return await Item.find().exec();
 };
+
+export const getStat = async () => {
+  
+  return await Item.find();
+}
 
 export const getItem = async (id: any) => {
   return await Item.findById(id);

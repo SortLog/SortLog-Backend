@@ -16,7 +16,6 @@ itemRouter.get('/list', async (req, res) => {
     return res.status(StatusCodes.NOT_FOUND).json(err);
   }
 });
-
 // get specific data
 itemRouter.get('/:id', async (req, res) => {
   const { id } = req.params;

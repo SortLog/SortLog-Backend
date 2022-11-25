@@ -36,42 +36,52 @@ pipeline {
 
          stage('Build Docker Image and Image Updating to ECR'){
             when { anyOf { branch 'main'; branch 'dev' } }
-
-            steps {
-                withAWS(credentials: AWS_CRED, region: AWS_REGION){
-
-                    script {
-
-                        if(currentBuild.result != null && currentBuild.result != 'SUCCESS'){
-                            return false
+            stages {
+                stage ('Docker Build'){
+                    agent {
+                        docker {
+                            image 'tremendousure/sortlog'
                         }
+                    }
 
-                        if (env.BRANCH_NAME == 'dev' ){
-                            echo "Building and Uploading Dev Docker Image to ECR"
-                            sh '''
-                                docker build -t $IMAGE_DEV:$IMAGE_TAG .
-                                docker images --filter reference=$IMAGE_DEV
-                                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
-                                docker tag $IMAGE_DEV:$IMAGE_TAG $ECR_URL/$IMAGE_DEV:$IMAGE_TAG
-                                docker push $ECR_URL/$IMAGE_DEV:$IMAGE_TAG
-                            '''
-                        }
-                        
+                    steps {
+                        withAWS(credentials: AWS_CRED, region: AWS_REGION){
 
-                        if (env.BRANCH_NAME == 'main'){
-                            echo "Building and Uploading Prod Docker Image to ECR"
-                             sh '''
-                                docker build -t $IMAGE_PROD:$IMAGE_TAG .
-                                docker images --filter reference=$IMAGE_PROD
-                                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
-                                docker tag $IMAGE_PROD:$IMAGE_TAG $ECR_URL/$IMAGE_PROD:$IMAGE_TAG
-                                docker push $ECR_URL/$IMAGE_PROD:$IMAGE_TAG
-                            '''
+                            script {
+
+                                if(currentBuild.result != null && currentBuild.result != 'SUCCESS'){
+                                    return false
+                                }
+
+                                if (env.BRANCH_NAME == 'dev' ){
+                                    echo "Building and Uploading Dev Docker Image to ECR"
+                                    sh '''
+                                        docker build -t $IMAGE_DEV:$IMAGE_TAG .
+                                        docker images --filter reference=$IMAGE_DEV
+                                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
+                                        docker tag $IMAGE_DEV:$IMAGE_TAG $ECR_URL/$IMAGE_DEV:$IMAGE_TAG
+                                        docker push $ECR_URL/$IMAGE_DEV:$IMAGE_TAG
+                                    '''
+                                }
+                                
+
+                                if (env.BRANCH_NAME == 'main'){
+                                    echo "Building and Uploading Prod Docker Image to ECR"
+                                    sh '''
+                                        docker build -t $IMAGE_PROD:$IMAGE_TAG .
+                                        docker images --filter reference=$IMAGE_PROD
+                                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
+                                        docker tag $IMAGE_PROD:$IMAGE_TAG $ECR_URL/$IMAGE_PROD:$IMAGE_TAG
+                                        docker push $ECR_URL/$IMAGE_PROD:$IMAGE_TAG
+                                    '''
+                                }
+                            }                    
+                            
                         }
-                    }                    
-                    
+                    }
                 }
             }
+            
         } 
 
     }

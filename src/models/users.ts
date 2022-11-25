@@ -20,11 +20,9 @@ const UserSchema = new mongoose.Schema(
     },
     contactType: {
       type: String,
-      required: true,
     },
     phone: {
       type: String,
-      required: true,
     },
   },
   {

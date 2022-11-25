@@ -18,7 +18,7 @@ userRouter.get('/list', async (req, res) => {
 });
 
 // get specific data
-userRouter.get('/:id', async (req, res) => {
+userRouter.get('/id/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -32,9 +32,23 @@ userRouter.get('/:id', async (req, res) => {
   }
 });
 
+userRouter.get('/email/:email', async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const result = await Users.getUserByEmail(email);
+        if (!result) {
+        return res.status(StatusCodes.NOT_FOUND).json({ message: 'not found' });
+        }
+        return res.status(StatusCodes.OK).json(result);
+    } catch (err) {
+        return res.status(StatusCodes.NOT_FOUND).json(err);
+    }
+});
+
 // add new data
 userRouter.post('/add', async (req, res) => {
-  const { email, name, provider, photoUrl, contactType, phone } = req.body;
+  const { email, name, provider, photoUrl, contactType, phone} = req.body;
 
   try {
     const result = await Users.postUser({ email, name, provider, photoUrl, contactType, phone });
