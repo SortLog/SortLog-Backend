@@ -5,7 +5,6 @@ export const listItems = async () => {
 };
 
 export const getStat = async () => {
-  
   return await Item.find();
 }
 

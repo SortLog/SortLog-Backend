@@ -29,3 +29,4 @@ const companySchema = new Schema(
 const CompanyModel = model('companies', companySchema);
 
 export default CompanyModel;
+export { companySchema };

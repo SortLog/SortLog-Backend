@@ -5,7 +5,6 @@ const ItemSchema = new mongoose.Schema(
     sku: {
       type: String,
       required: true,
-      unique: true,
     },
     name: {
       type: String,
@@ -37,3 +36,4 @@ const ItemSchema = new mongoose.Schema(
 
 const Item = mongoose.model('items', ItemSchema);
 export default Item;
+export { ItemSchema };

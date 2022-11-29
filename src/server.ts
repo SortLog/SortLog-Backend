@@ -47,7 +47,6 @@ app.use('*', cors());
 app.use(compression());
 app.get('/', (req, res) => res.send('Hello SortLog!'));
 app.get('/health-check', (req, res) => res.status(200).send({ message: 'healthy' }));
-app.get('/', (req, res) => res.send('Hello SortLog!'));
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerOptions)));
 app.use('/api', Router);
 errorMiddleware(app);
