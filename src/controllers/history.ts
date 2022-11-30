@@ -38,11 +38,11 @@ historyRouter.post('/add', async (req, res) => {
 
   try {
     const result = await History.postHistory({ trackingNumber, Date, items, changeQuantities, users });
-    // items.forEach(async (item: any, index: any) => {
-    //   const { _id } = item;
-    //   item.quantity = item.quantity + changeQuantities[index];
-    //   Item.putItem(_id, item);
-    // });
+    items.forEach(async (item: any, index: any) => {
+      const { _id } = item;
+      item.quantity = item.quantity + changeQuantities[index];
+      Item.putItem(_id, item);
+    });
 
     return res.status(StatusCodes.OK).json(result);
   } catch (err) {
