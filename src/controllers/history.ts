@@ -18,7 +18,7 @@ historyRouter.get('/list', async (req, res) => {
   }
 });
 // get specific data
-historyRouter.get('/:id', async (req, res) => {
+historyRouter.get('/get/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
