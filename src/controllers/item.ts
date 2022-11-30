@@ -33,10 +33,10 @@ itemRouter.get('/:id', async (req, res) => {
 
 // add new data
 itemRouter.post('/add', async (req, res) => {
-  const { sku, name, price, quantity, size, tags, category, image } = req.body;
+  const { sku, name, price, quantity, size, tags, category, image, note } = req.body;
 
   try {
-    const result = await Items.postItem({ sku, name, price, quantity, size, tags, category, image });
+    const result = await Items.postItem({ sku, name, price, quantity, size, tags, category, image, note });
     return res.status(StatusCodes.OK).json(result);
   } catch (err) {
     return res.status(StatusCodes.NOT_FOUND).json(err);
@@ -45,11 +45,11 @@ itemRouter.post('/add', async (req, res) => {
 
 // update existing data
 itemRouter.put('/:id', async (req, res) => {
-  const { sku, name, price, quantity, size, tags, category, image } = req.body;
+  const { sku, name, price, quantity, size, tags, category, image, note } = req.body;
   const { id } = req.params;
 
   try {
-    const result = await Items.putItem(id, { sku, name, price, quantity, size, tags, category, image });
+    const result = await Items.putItem(id, { sku, name, price, quantity, size, tags, category, image, note });
     return res.status(StatusCodes.OK).json(result);
   } catch (err) {
     return res.status(StatusCodes.NOT_FOUND).json(err);

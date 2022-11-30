@@ -51,6 +51,12 @@ app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerOptions)))
 app.use('/api', Router);
 errorMiddleware(app);
 
+// app.use(express.json({limit: 1024000}));
+// app.use(express.urlencoded({limit: 1024000}));
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: 500*1024*1024, extended: true}));
+app.use(bodyParser.urlencoded({limit: 500*1024*1024, extended: true}));
+
 server.applyMiddleware({ app, path: '/graphql' });
 
 const httpServer = createServer(app);

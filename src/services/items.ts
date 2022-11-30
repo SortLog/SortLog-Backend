@@ -1,4 +1,4 @@
-import Item from "../models/items";
+import Item from '../models/items';
 
 export const listItems = async () => {
   return await Item.find().exec();
@@ -6,20 +6,20 @@ export const listItems = async () => {
 
 export const getStat = async () => {
   return await Item.find();
-}
+};
 
 export const getItem = async (id: any) => {
   return await Item.findById(id);
 };
 
 export const postItem = async (item: any) => {
-  const { sku, name, price, quantity, size, tags, category, image } = item;
-  const result = new Item({ sku, name, price, quantity, size, tags, category, image });
+  const { sku, name, price, quantity, size, tags, category, image, note } = item;
+  const result = new Item({ sku, name, price, quantity, size, tags, category, image, note });
   return await result.save();
 };
 
 export const putItem = async (id: any, item: any) => {
-  const { sku, name, price, quantity, size, tags, category, image } = item;
+  const { sku, name, price, quantity, size, tags, category, image, note } = item;
   const theItem = await Item.findById(id);
 
   theItem.sku = sku;
@@ -30,6 +30,7 @@ export const putItem = async (id: any, item: any) => {
   theItem.tags = tags;
   theItem.category = category;
   theItem.image = image;
+  theItem.note = note;
 
   return await theItem.save();
 };
